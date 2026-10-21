@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>استبيان المقابر والمغاسل</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Noto+Kufi+Arabic:wght@600;700&display=swap">
+<style>
+/* Layout: single centered column of numbered sections, like the printed form; owner gets a results board above it. */
+:root{
+  --bg:#f6f4ee; --paper:#ffffff; --fg:#1d2a24; --muted:#6a756f; --line:#d9d6cc;
+  --accent:#0f6b4f; --accent-fg:#ffffff; --accent-soft:#e3f0ea;
+  --warn-soft:#fbf1dc; --warn:#8a5a0a; --ok-soft:#e3f0ea; --ok:#0f6b4f;
+  --display:"Noto Kufi Arabic","IBM Plex Sans Arabic",system-ui,sans-serif;
+  --body:"IBM Plex Sans Arabic",system-ui,"Segoe UI",Tahoma,sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#151a18; --paper:#1e2522; --fg:#e8ebe6; --muted:#9aa49e; --line:#343d38;
+  --accent:#4fb08e; --accent-fg:#0d1512; --accent-soft:#1f3a30;
+  --warn-soft:#3a2f16; --warn:#e5b85c; --ok-soft:#1f3a30; --ok:#6fcba8; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#151a18; --paper:#1e2522; --fg:#e8ebe6; --muted:#9aa49e; --line:#343d38;
+  --accent:#4fb08e; --accent-fg:#0d1512; --accent-soft:#1f3a30;
+  --warn-soft:#3a2f16; --warn:#e5b85c; --ok-soft:#1f3a30; --ok:#6fcba8; color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.7;direction:rtl;
+  padding-block:24px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+h1{font-family:var(--display);font-size:clamp(22px,3.4vw,30px);margin:0;line-height:1.4;text-wrap:balance}
+h2{font-family:var(--display);font-size:17px;margin:0;display:flex;align-items:center;gap:10px}
+h2 .n{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--accent-fg);font-size:14px;font-family:var(--body);font-variant-numeric:tabular-nums}
+p{margin:0}
+.muted{color:var(--muted)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:14px}
+header.card{gap:10px}
+.deadline{display:inline-flex;gap:8px;align-items:center;background:var(--warn-soft);color:var(--warn);padding:4px 12px;border-radius:999px;font-weight:600;font-size:13px;width:max-content}
+ul.inst{margin:0;padding-inline-start:20px;display:flex;flex-direction:column;gap:4px;color:var(--muted);font-size:14px}
+label{font-weight:500;font-size:14px}
+input[type=text],input[type=number],input[type=email],input[type=tel],input[type=date],textarea{
+  width:100%;font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px;min-width:0}
+input:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+input[type=number]{font-variant-numeric:tabular-nums;direction:ltr;text-align:right}
+textarea{min-height:64px;resize:vertical}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:620px}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:right;vertical-align:middle}
+th{background:var(--accent-soft);font-weight:600;font-size:13px}
+td.asset{font-weight:700;background:var(--accent-soft)}
+td input[type=number]{padding:6px 8px}
+td.total{font-variant-numeric:tabular-nums;font-weight:600;text-align:left;direction:ltr}
+.est{display:flex;align-items:center;gap:4px;font-size:12px;white-space:nowrap}
+.checks{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:8px}
+.chk{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg)}
+.chk input{margin-top:5px;accent-color:var(--accent)}
+.chk.other{grid-column:1/-1;align-items:center}
+.chk.other input[type=text]{flex:1}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+button{font:inherit;font-weight:600;border-radius:8px;padding:10px 18px;cursor:pointer;border:1px solid var(--line);background:var(--paper);color:var(--fg)}
+button.primary{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+button:disabled{opacity:.55;cursor:not-allowed}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.status{font-size:14px}
+.badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:12px;font-weight:600}
+.badge.ok{background:var(--ok-soft);color:var(--ok)}
+.badge.draft{background:var(--warn-soft);color:var(--warn)}
+.notice{padding:12px 14px;border-radius:8px;background:var(--warn-soft);color:var(--warn);font-size:14px}
+.notice.ok{background:var(--ok-soft);color:var(--ok)}
+/* owner board */
+.board{border-color:var(--accent)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.kpi{background:var(--bg);border-radius:8px;padding:10px 14px}
+.kpi b{display:block;font-size:24px;font-variant-numeric:tabular-nums;line-height:1.2}
+.kpi span{font-size:12px;color:var(--muted)}
+table.list{min-width:0}
+table.list td{font-size:14px}
+details{border:1px solid var(--line);border-radius:8px;padding:8px 12px;background:var(--bg)}
+summary{cursor:pointer;font-weight:600}
+.kv{display:grid;grid-template-columns:max-content 1fr;gap:4px 14px;font-size:14px;margin-top:8px}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
+@media (prefers-reduced-motion:no-preference){ button{transition:filter .15s} button:hover:not(:disabled){filter:brightness(1.06)} }
+@media (max-width:480px){ .card{padding:14px} }
+</style>
+<style>body{margin:0}</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="card">
+    <h1>استبيان تكاليف وتحديات المقابر ومغاسل الموتى</h1>
+    <p class="muted"><b>الهدف:</b> معرفة ما تكلّفه المقابر ومغاسل الموتى على الأمانة سنوياً (إنشاءً وصيانةً وتشغيلاً)، وما حصة الجمعيات والمتبرعين من هذه التكلفة، وأبرز التحديات في هذا الباب.</p>
+    <ul class="inst">
+      <li>القيم المطلوبة هي لسنة مالية مكتملة.</li>
+      <li>تُقبل الأرقام التقديرية بشرط تعليم خانة (تقديري) أمام الرقم.</li>
+      <li>تُدمج أرقام البلديات التابعة ضمن إجابة الأمانة.</li>
+      <li>ما تكتبه يُحفظ تلقائياً في متصفحك حتى تضغط «إرسال الإجابة»، فيمكنك العودة لاحقاً من الجهاز نفسه.</li>
+    </ul>
+    <span class="deadline">الموعد النهائي للرد: 22 / 10 / 2026م</span>
+  </header>
+<form id="f" novalidate>
+    <div class="wrap" style="gap:20px">
+    <section class="card">
+      <h2><span class="n">1</span>بيانات الأمانة</h2>
+      <div class="grid2">
+        <div class="field"><label for="amanah">اسم الأمانة</label><input type="text" id="amanah" name="amanah" required></div>
+        <div class="field"><label for="filler">مسؤول التعبئة ومنصبه</label><input type="text" id="filler" name="filler"></div>
+        <div class="field"><label for="cemeteries">عدد المقابر المشغَّلة</label><input type="number" id="cemeteries" name="cemeteries" min="0" step="1"></div>
+        <div class="field"><label for="washhouses">عدد المغاسل المشغَّلة</label><input type="number" id="washhouses" name="washhouses" min="0" step="1"></div>
+        <div class="field"><label for="phone">رقم الجوال</label><input type="tel" id="phone" name="phone" dir="ltr" style="text-align:right"></div>
+        <div class="field"><label for="email">البريد الإلكتروني</label><input type="email" id="email" name="email" dir="ltr" style="text-align:right"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2><span class="n">2</span>التكاليف ومصادر تمويلها</h2>
+      <p class="muted" style="font-size:13px">الإنشاء = متوسط ما صُرف سنوياً على مشاريع الإنشاء والتوسعة خلال آخر 3 سنوات. الصيانة والتشغيل = آخر سنة مالية. إجمالي التكلفة يُحسب تلقائياً = حصة الأمانة + حصة الجمعيات.</p>
+      <div class="tbl"><table>
+        <thead><tr><th>الأصل</th><th>نوع التكلفة</th><th>من ميزانية الأمانة (ريال)</th><th>من الجمعيات والمتبرعين (ريال)</th><th>إجمالي التكلفة السنوية</th><th>تقديري؟</th></tr></thead>
+        <tbody id="costRows"></tbody>
+      </table></div>
+    </section>
+
+    <section class="card">
+      <h2><span class="n">3</span>التحديات</h2>
+      <p class="muted" style="font-size:13px">علّم ما ينطبق:</p>
+      <div class="checks" id="checks"></div>
+    </section>
+
+    <section class="card">
+      <h2><span class="n">4</span>أبرز ثلاثة تحديات والحلول المقترحة</h2>
+      <div class="tbl"><table>
+        <thead><tr><th style="width:40px">#</th><th>التحدي</th><th>مقترح المعالجة</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><textarea id="ch1" name="ch1"></textarea></td><td><textarea id="sol1" name="sol1"></textarea></td></tr>
+          <tr><td>2</td><td><textarea id="ch2" name="ch2"></textarea></td><td><textarea id="sol2" name="sol2"></textarea></td></tr>
+          <tr><td>3</td><td><textarea id="ch3" name="ch3"></textarea></td><td><textarea id="sol3" name="sol3"></textarea></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="card">
+      <h2><span class="n">5</span>اعتماد الإجابة</h2>
+      <div class="tbl"><table>
+        <thead><tr><th>الصفة</th><th>الاسم</th><th>التاريخ</th></tr></thead>
+        <tbody>
+          <tr><td>مُعدّ الاستبيان</td><td><input type="text" id="prepName" name="prepName"></td><td><input type="date" id="prepDate" name="prepDate"></td></tr>
+          <tr><td>مدير الإدارة المختصة</td><td><input type="text" id="mgrName" name="mgrName"></td><td><input type="date" id="mgrDate" name="mgrDate"></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="card">
+      <div class="actions">
+        <button type="submit" class="primary" id="btnSubmit">إرسال الإجابة</button>
+        <span class="status" id="saveStatus"></span>
+      </div>
+      <div id="formNotice" class="notice" hidden></div>
+    </section>
+    </div>
+  </form>
+</div>
+<script>
+const SB_URL = "https://ydklglhtfxlocvvkspll.supabase.co";
+const SB_KEY = "sb_publishable_mfgD-h6sU8NEI3Y7Y_m-GA_3poYA1uI";
+const COST_ROWS = [
+  {k:"cem_build", asset:"المقابر", type:"الإنشاء والتوسعة"},
+  {k:"cem_maint", asset:"", type:"الصيانة"},
+  {k:"cem_ops",   asset:"", type:"التشغيل"},
+  {k:"wash_build",asset:"المغاسل", type:"الإنشاء والتجهيز"},
+  {k:"wash_maint",asset:"", type:"الصيانة"},
+  {k:"wash_ops",  asset:"", type:"التشغيل"},
+];
+const CHALLENGES = [
+  {k:"c_budget",   t:"الاعتماد المالي للصيانة والتشغيل غير كافٍ"},
+  {k:"c_old",      t:"قدم المرافق والتجهيزات"},
+  {k:"c_donation", t:"الاعتماد على تبرعات غير مضمونة الاستمرار"},
+  {k:"c_roles",    t:"عدم وضوح المسؤوليات بين الأمانة والبلديات والجمعيات"},
+  {k:"c_land",     t:"صعوبة توفير أراضٍ جديدة أو قرب امتلاء المقابر القائمة"},
+  {k:"c_noline",   t:"عدم توفر بند في الميزانية"},
+  {k:"c_staff",    t:"نقص الكوادر (مغسّلون ومغسّلات وحفّارون ومشرفون)"},
+];
+const TEXT_FIELDS = ["amanah","filler","cemeteries","washhouses","phone","email","ch1","sol1","ch2","sol2","ch3","sol3","prepName","prepDate","mgrName","mgrDate","c_other"];
+const $ = id => document.getElementById(id);
+const fmt = n => (Number(n)||0).toLocaleString("en-US");
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+$("costRows").innerHTML = COST_ROWS.map(r => `
+  <tr>
+    <td class="asset">${r.asset}</td><td>${r.type}</td>
+    <td><input type="number" min="0" step="1" id="${r.k}_am" name="${r.k}_am"></td>
+    <td><input type="number" min="0" step="1" id="${r.k}_as" name="${r.k}_as"></td>
+    <td class="total" id="${r.k}_tot">0</td>
+    <td><label class="est"><input type="checkbox" id="${r.k}_est" name="${r.k}_est">تقديري</label></td>
+  </tr>`).join("");
+$("checks").innerHTML = CHALLENGES.map(c => `
+  <label class="chk"><input type="checkbox" id="${c.k}" name="${c.k}"><span>${c.t}</span></label>`).join("") +
+  `<label class="chk other"><span>تحدٍّ آخر:</span><input type="text" id="c_other" name="c_other" placeholder="اكتب التحدي"></label>`;
+
+function recalc(){ COST_ROWS.forEach(r => { $(r.k+"_tot").textContent = fmt((+$(r.k+"_am").value||0) + (+$(r.k+"_as").value||0)); }); }
+function collect(){
+  const d = {};
+  TEXT_FIELDS.forEach(k => d[k] = $(k).value.trim());
+  const costs = {}; let grand = 0;
+  COST_ROWS.forEach(r => {
+    const am = +$(r.k+"_am").value||0, as = +$(r.k+"_as").value||0;
+    costs[r.k] = {amanah:am, assoc:as, total:am+as, est:$(r.k+"_est").checked}; grand += am+as;
+  });
+  d.costs = costs; d.grandTotal = grand;
+  d.challenges = CHALLENGES.filter(c => $(c.k).checked).map(c => c.k);
+  return d;
+}
+function fill(d){
+  if (!d) return;
+  TEXT_FIELDS.forEach(k => { if (d[k] != null) $(k).value = d[k]; });
+  COST_ROWS.forEach(r => { const c = d.costs?.[r.k]; if (c){ $(r.k+"_am").value = c.amanah||""; $(r.k+"_as").value = c.assoc||""; $(r.k+"_est").checked = !!c.est; } });
+  CHALLENGES.forEach(c => $(c.k).checked = (d.challenges||[]).includes(c.k));
+  recalc();
+}
+const LS = "cemetery-survey-draft";
+try { fill(JSON.parse(localStorage.getItem(LS))); } catch {}
+let t;
+$("f").addEventListener("input", () => { recalc(); clearTimeout(t); t = setTimeout(() => { try { localStorage.setItem(LS, JSON.stringify(collect())); } catch {} }, 400); });
+
+const showNotice = (txt, ok) => { const n = $("formNotice"); n.textContent = txt; n.className = "notice" + (ok?" ok":""); n.hidden = !txt; n.scrollIntoView({block:"nearest"}); };
+
+$("f").addEventListener("submit", async e => {
+  e.preventDefault();
+  const d = collect();
+  if (!d.amanah) { showNotice("اكتب اسم الأمانة قبل الإرسال."); $("amanah").focus(); return; }
+  const row = {
+    status:"submitted", amanah:d.amanah, filler:d.filler, phone:d.phone, email:d.email,
+    cemeteries: d.cemeteries===""?null:+d.cemeteries, washhouses: d.washhouses===""?null:+d.washhouses,
+    costs:d.costs, grand_total:d.grandTotal, challenges:d.challenges, c_other:d.c_other,
+    ch1:d.ch1, sol1:d.sol1, ch2:d.ch2, sol2:d.sol2, ch3:d.ch3, sol3:d.sol3,
+    prep_name:d.prepName, prep_date:d.prepDate, mgr_name:d.mgrName, mgr_date:d.mgrDate
+  };
+  $("btnSubmit").disabled = true; $("saveStatus").textContent = "جارٍ الإرسال…";
+  try {
+    const res = await fetch(SB_URL + "/rest/v1/survey_responses", {
+      method:"POST",
+      headers:{ "apikey":SB_KEY, "Authorization":"Bearer "+SB_KEY, "Content-Type":"application/json", "Prefer":"return=minimal" },
+      body: JSON.stringify(row)
+    });
+    if (!res.ok) throw new Error(await res.text());
+    $("saveStatus").innerHTML = '<span class="badge ok">تم الإرسال</span>';
+    showNotice("وصلت إجابتك. شكراً لك. إن احتجت تعديلها فأرسل النموذج مرة أخرى وسيُعتمد الأحدث.", true);
+    try { localStorage.removeItem(LS); } catch {}
+  } catch (err) {
+    $("saveStatus").textContent = "";
+    showNotice("تعذر الإرسال. تأكد من اتصالك بالإنترنت وحاول مرة أخرى؛ ما كتبته محفوظ في متصفحك.");
+    console.error(err);
+  } finally { $("btnSubmit").disabled = false; }
+});
+</script>
+</body>
+</html>
